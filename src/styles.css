@@ -1228,6 +1228,15 @@ h1 {
   z-index: 5;
   transition: opacity 0.1s;
 }
+/* Keep the hover target continuous across the visual gap above the toolbar. */
+.message-tools::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -1px;
+  right: -1px;
+  height: 6px;
+}
 .own .message-tools {
   left: auto;
   right: 0;

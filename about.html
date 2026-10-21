@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#27744f" />
+    <meta name="description" content="对话工坊微信聊天模拟工具的功能介绍和使用指南。" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="stylesheet" href="/src/about.css" />
+    <title>使用指南 | 对话工坊</title>
+  </head>
+  <body>
+    <header class="guide-header">
+      <a class="guide-brand" href="%BASE_URL%"
+        ><img src="%BASE_URL%favicon.svg" width="32" height="32" alt="" />对话工坊</a
+      ><a class="guide-open" href="%BASE_URL%"
+        >打开聊天编辑器
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 16 16"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path d="M4 12l8-8M4 4h8v8" /></svg
+      ></a>
+    </header>
+    <main>
+      <section class="guide-intro">
+        <h1>把一段对话，<br />自然地编排出来。</h1>
+        <p>
+          对话工坊是一款网页版微信聊天记录模拟工具。以两部手机的视角，编排文字、表情、图片、红包和转账，再截下需要的聊天画面。
+        </p>
+        <a class="guide-cta" href="%BASE_URL%"
+          >开始编排对话
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M2 8h12M9 3l5 5-5 5" /></svg
+        ></a>
+        <span class="guide-note">无需登录 · 草稿保存在当前浏览器</span>
+      </section>
+      <section aria-labelledby="features-title" class="guide-section">
+        <h2 id="features-title">两边一起聊，细节分别调。</h2>
+        <dl class="guide-features">
+          <div>
+            <dt>双手机视角</dt>
+            <dd>左边操作对方，右边操作自己；在任意一侧发送，两边同步显示同一段对话。</dd>
+          </div>
+          <div>
+            <dt>文字、表情与图片</dt>
+            <dd>
+              在聊天输入框发送文字或
+              emoji，也可以选择图片或粘贴图片。支持在任意两条消息之间补插内容。
+            </dd>
+          </div>
+          <div>
+            <dt>红包与转账联动</dt>
+            <dd>
+              在接收方领取红包、收款或退还转账，自动更新相关记录与提示，减少手动补消息的操作。
+            </dd>
+          </div>
+          <div>
+            <dt>独立的手机设置</dt>
+            <dd>双方可分别选择 Android 或 iOS 样式，设置状态栏时间、电量、信号和未读数量。</dd>
+          </div>
+          <div>
+            <dt>分组与消息时间</dt>
+            <dd>
+              按聊天对象管理独立分组。指定发送时间后，根据消息间隔显示时间标签，也可单独调整消息日期。
+            </dd>
+          </div>
+          <div>
+            <dt>截取当前聊天画面</dt>
+            <dd>
+              滚动到需要的位置，截取对应手机的当前画面；截图包含状态栏，隐藏编辑按钮，可保存 PNG。
+            </dd>
+          </div>
+        </dl>
+      </section>
+      <section aria-labelledby="steps-title" class="guide-section guide-steps">
+        <h2 id="steps-title">从第一句话开始</h2>
+        <ol>
+          <li><strong>设置聊天双方。</strong>修改昵称和头像，为不同对象新建分组。</li>
+          <li>
+            <strong>在任一手机里发消息。</strong>Enter 发送，Shift + Enter
+            换行；输入框旁的「＋」可发送图片、红包、转账或时间节点。
+          </li>
+          <li>
+            <strong>调整顺序和时间。</strong
+            >点击手机上方的插入按钮，再选消息间的位置；悬停已有消息可编辑，时钟按钮可调整日期。
+          </li>
+          <li>
+            <strong>截下需要的画面。</strong
+            >点对应手机的截图按钮，预览后保存图片。复制图片需要浏览器支持和剪贴板权限。
+          </li>
+        </ol>
+      </section>
+      <section aria-labelledby="faq-title" class="guide-section guide-faq">
+        <h2 id="faq-title">使用前，你可能想了解</h2>
+        <details open>
+          <summary>聊天内容会上传吗？</summary>
+          <p>
+            工具在当前浏览器处理消息、头像和上传图片，草稿保存在
+            localStorage，不会因为发布网页而上传到
+            GitHub。清理站点数据会删除草稿，不同设备和浏览器之间不会自动同步。
+          </p>
+        </details>
+        <details>
+          <summary>生成的是微信真实聊天记录吗？</summary>
+          <p>
+            这是独立的聊天界面模拟工具，不连接微信，也不会执行真实转账或发送红包。适合对话演示和界面原型。
+          </p>
+        </details>
+        <details>
+          <summary>可以批量管理不同人的对话吗？</summary>
+          <p>
+            可以通过聊天分组分别管理消息、头像、昵称和手机设置。删除的分组会进入最近删除，可在工具内恢复。
+          </p>
+        </details>
+        <details>
+          <summary>为什么与我的手机截图有细微差别？</summary>
+          <p>
+            微信版本、手机系统、字体和屏幕比例可能影响界面细节。工具提供 Android 与 iOS
+            浅色样式和独立状态栏配置，方便按需要调整。
+          </p>
+        </details>
+      </section>
+      <section class="guide-end">
+        <h2>下一句，由你来写。</h2>
+        <a class="guide-cta" href="%BASE_URL%"
+          >打开聊天编辑器
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M2 8h12M9 3l5 5-5 5" /></svg
+        ></a>
+      </section>
+    </main>
+    <footer>对话工坊 · 独立的聊天界面模拟工具，与微信官方无关联。</footer>
+  </body>
+</html>

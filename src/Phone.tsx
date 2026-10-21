@@ -21,6 +21,7 @@ import type { Device, Message, PersonId, Project } from './model';
 import { money, opposite } from './model';
 import StatusBar from './StatusBar';
 import MediaBubble from './MediaBubble';
+import EmojiPicker from './EmojiPicker';
 import type { MediaAction } from './MediaForm';
 import { callLabel } from './media-message';
 import {
@@ -66,41 +67,6 @@ interface Props {
   onCapture: (id: PersonId) => void;
   capturing: boolean;
 }
-const emojis = [
-  '😀',
-  '😄',
-  '🥹',
-  '😊',
-  '🥰',
-  '😎',
-  '🤔',
-  '😭',
-  '😂',
-  '🤭',
-  '🥳',
-  '😴',
-  '👍',
-  '👏',
-  '🤝',
-  '🙏',
-  '❤️',
-  '💚',
-  '🌹',
-  '🌿',
-  '☀️',
-  '🌈',
-  '🎉',
-  '🎁',
-  '☕️',
-  '🍰',
-  '🍜',
-  '🍻',
-  '🐱',
-  '🐶',
-  '✨',
-  '💪',
-];
-
 function MoneyBubble({ message, own }: { message: Message; own: boolean }) {
   const isRed = message.type === 'redpacket';
   const done = message.status !== 'pending';
@@ -673,20 +639,12 @@ export default function Phone(props: Props) {
                 </button>
               </div>
               {panel === 'emoji' ? (
-                <div className="emoji-grid">
-                  {emojis.map((emoji) => (
-                    <button
-                      key={emoji}
-                      aria-label={`表情 ${emoji}`}
-                      onClick={() => {
-                        setDraft((s) => s + emoji);
-                        inputRef.current?.focus();
-                      }}
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
+                <EmojiPicker
+                  onSelect={(emoji) => {
+                    setDraft((s) => s + emoji);
+                    inputRef.current?.focus();
+                  }}
+                />
               ) : (
                 <div className="more-grid">
                   <button

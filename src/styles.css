@@ -1625,6 +1625,32 @@ h1 {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 5px 0;
+  max-height: min(165px, 26dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.composer-panel .emoji-categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  height: auto;
+  gap: 2px;
+  padding: 3px;
+  background: #eef2eb;
+}
+.composer-panel .emoji-categories > button {
+  padding: 5px 3px;
+  font-size: 11px;
+  line-height: 16px;
+  color: #71816b;
+}
+.composer-panel .emoji-categories > button[data-state='active'] {
+  color: #27744f;
+  background: #fff;
+}
+.composer-panel .emoji-content {
+  margin-top: 7px;
 }
 .emoji-grid > button {
   font-size: 21px;

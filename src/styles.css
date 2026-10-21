@@ -3636,3 +3636,74 @@ body,
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+
+/* Voice recordings and call history share the chat's existing bubble geometry. */
+.voice-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 100%;
+}
+.own .voice-message {
+  align-items: flex-end;
+}
+.voice-bubble {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-width: 80px;
+  min-height: 36px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  line-height: 20px;
+}
+.voice-wave {
+  display: block;
+  width: 20px;
+  height: 24px;
+  flex: none;
+  color: #171717;
+}
+.own .voice-bubble {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+.voice-transcript {
+  position: relative;
+  max-width: 100%;
+  font-weight: 400;
+}
+.voice-transcript:before {
+  display: none;
+}
+.voice-unread {
+  position: absolute;
+  right: -12px;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f34b45;
+}
+.call-bubble {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  min-height: 36px;
+  padding: 8px 11px;
+  line-height: 20px;
+}
+.call-receiver {
+  display: block;
+  width: 23px;
+  height: 18px;
+  flex: none;
+}
+.own .call-bubble {
+  flex-direction: row-reverse;
+}

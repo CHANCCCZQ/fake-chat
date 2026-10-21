@@ -9,6 +9,8 @@ import {
   Clock3,
   Gift,
   ImagePlus,
+  Mic,
+  Phone as PhoneIcon,
   Pencil,
   Plus,
   ScanLine,
@@ -18,6 +20,9 @@ import {
 import type { Device, Message, PersonId, Project } from './model';
 import { money, opposite } from './model';
 import StatusBar from './StatusBar';
+import MediaBubble from './MediaBubble';
+import type { MediaAction } from './MediaForm';
+import { callLabel } from './media-message';
 import {
   dateTimeValue,
   formatChatTime,
@@ -27,6 +32,7 @@ import {
 } from './chat-time';
 
 export type PhoneAction =
+  | MediaAction
   | { kind: 'money'; sender: PersonId; type: 'transfer' | 'redpacket'; id?: string }
   | { kind: 'details'; id: string; viewer: PersonId }
   | { kind: 'text'; id: string }
@@ -50,6 +56,7 @@ interface Props {
   onSend: (sender: PersonId, type: 'text' | 'image', text: string) => void;
   onAction: (action: PhoneAction) => void;
   onDelete: (id: string) => void;
+  onReadVoice: (id: string, viewer: PersonId) => void;
   onImage: (sender: PersonId, file: File, replaceId?: string) => Promise<void>;
   onOS: (id: PersonId, os: Device['os']) => void;
   onSettings: (id: PersonId) => void;
@@ -154,6 +161,7 @@ export default function Phone(props: Props) {
     onSend,
     onAction,
     onDelete,
+    onReadVoice,
     onImage,
     onOS,
     onSettings,
@@ -415,9 +423,10 @@ export default function Phone(props: Props) {
                         <div className="message-content">
                           <button
                             className={`message-hit ${moneyMessage ? 'money-hit' : ''} ${message.type === 'image' ? 'image-hit' : ''}`}
-                            aria-label={`${own ? '发送' : '收到'}的${message.type === 'text' ? '消息：' + message.text : message.type === 'image' ? '图片' : message.type === 'redpacket' ? '红包' : '转账'}`}
+                            aria-label={`${own ? '发送' : '收到'}的${message.type === 'text' ? '消息：' + message.text : message.type === 'image' ? '图片' : message.type === 'redpacket' ? '红包' : message.type === 'voice' ? `语音，${message.durationSeconds}秒${!own && message.voiceUnread ? '，未读' : ''}` : message.type === 'call' ? `语音通话：${callLabel(message, id)}` : '转账'}`}
                             onClick={() => {
                               setSelected(message.id);
+                              if (message.type === 'voice') onReadVoice(message.id, id);
                               if (moneyMessage)
                                 onAction({
                                   kind: 'details',
@@ -428,10 +437,19 @@ export default function Phone(props: Props) {
                             onDoubleClick={() => {
                               if (editable && message.type === 'text')
                                 onAction({ kind: 'text', id: message.id });
+                              if (message.type === 'voice' || message.type === 'call')
+                                onAction({
+                                  kind: 'media',
+                                  type: message.type,
+                                  sender: message.sender,
+                                  id: message.id,
+                                });
                             }}
                           >
                             {moneyMessage ? (
                               <MoneyBubble message={message} own={own} />
+                            ) : message.type === 'voice' || message.type === 'call' ? (
+                              <MediaBubble message={message} viewer={id} />
                             ) : message.type === 'image' ? (
                               <img
                                 src={message.text}
@@ -475,12 +493,19 @@ export default function Phone(props: Props) {
                                         type: message.type as 'transfer' | 'redpacket',
                                         id: message.id,
                                       })
-                                    : message.type === 'text'
-                                      ? onAction({ kind: 'text', id: message.id })
-                                      : (() => {
-                                          replaceImage.current = message.id;
-                                          imageRef.current?.click();
-                                        })()
+                                    : message.type === 'voice' || message.type === 'call'
+                                      ? onAction({
+                                          kind: 'media',
+                                          type: message.type,
+                                          sender: message.sender,
+                                          id: message.id,
+                                        })
+                                      : message.type === 'text'
+                                        ? onAction({ kind: 'text', id: message.id })
+                                        : (() => {
+                                            replaceImage.current = message.id;
+                                            imageRef.current?.click();
+                                          })()
                                 }
                               >
                                 <Pencil size={12} />
@@ -551,8 +576,11 @@ export default function Phone(props: Props) {
           <div className="wechat-composer" inert={pickingInsertion}>
             <button
               className="composer-icon"
-              aria-label="更多消息类型"
-              onClick={() => setPanel(panel === 'more' ? null : 'more')}
+              aria-label="发送语音消息"
+              onClick={() => {
+                setPanel(null);
+                onAction({ kind: 'media', sender: id, type: 'voice' });
+              }}
             >
               <img src={assetPath('wechat/voice.png')} alt="" />
             </button>
@@ -638,6 +666,28 @@ export default function Phone(props: Props) {
                 </div>
               ) : (
                 <div className="more-grid">
+                  <button
+                    onClick={() => {
+                      setPanel(null);
+                      onAction({ kind: 'media', sender: id, type: 'voice' });
+                    }}
+                  >
+                    <span>
+                      <Mic size={26} strokeWidth={1.5} />
+                    </span>
+                    语音消息
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPanel(null);
+                      onAction({ kind: 'media', sender: id, type: 'call' });
+                    }}
+                  >
+                    <span>
+                      <PhoneIcon size={26} strokeWidth={1.5} />
+                    </span>
+                    语音通话
+                  </button>
                   <button
                     onClick={() => {
                       replaceImage.current = undefined;

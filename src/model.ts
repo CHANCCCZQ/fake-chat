@@ -1,9 +1,11 @@
 import { migrateMessageTimes, validTime } from './chat-time';
 import type { TimeSettings } from './chat-time';
+import { normalizeMedia } from './media-message';
+import type { CallStatus } from './media-message';
 export type PersonId = 'other' | 'self';
 export type MoneyStatus = 'pending' | 'received' | 'returned';
 export type MessageType =
-  'text' | 'image' | 'redpacket' | 'transfer' | 'time' | 'receipt' | 'notice';
+  'text' | 'image' | 'redpacket' | 'transfer' | 'time' | 'receipt' | 'notice' | 'voice' | 'call';
 export interface Person {
   name: string;
   avatar: string;
@@ -31,6 +33,9 @@ export interface Message {
   status?: MoneyStatus;
   parentId?: string;
   sentAt?: number;
+  durationSeconds?: number;
+  voiceUnread?: boolean;
+  callStatus?: CallStatus;
 }
 export interface Project {
   version: 1;
@@ -191,7 +196,17 @@ export function normalizeProject(value: unknown): Project {
     )
       return createProject();
     const base = createProject();
-    const types = new Set(['text', 'image', 'redpacket', 'transfer', 'time', 'receipt', 'notice']);
+    const types = new Set([
+      'text',
+      'image',
+      'redpacket',
+      'transfer',
+      'time',
+      'receipt',
+      'notice',
+      'voice',
+      'call',
+    ]);
     return {
       version: 1,
       people: Object.fromEntries(
@@ -223,14 +238,16 @@ export function normalizeProject(value: unknown): Project {
         ]),
       ) as Project['devices'],
       messages: migrateMessageTimes(
-        raw.messages.filter(
-          (m: Message) =>
-            m &&
-            typeof m.id === 'string' &&
-            types.has(m.type) &&
-            ['other', 'self'].includes(m.sender) &&
-            typeof m.text === 'string',
-        ),
+        raw.messages
+          .filter(
+            (m: Message) =>
+              m &&
+              typeof m.id === 'string' &&
+              types.has(m.type) &&
+              ['other', 'self'].includes(m.sender) &&
+              typeof m.text === 'string',
+          )
+          .map(normalizeMedia),
         Date.now(),
         raw.devices.self.time,
       ),

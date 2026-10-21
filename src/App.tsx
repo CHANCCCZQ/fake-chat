@@ -45,6 +45,8 @@ import type { Device, Message, MoneyStatus, PersonId, Project } from './model';
 import Phone from './Phone';
 import type { PhoneAction } from './Phone';
 import Dialog from './Dialog';
+import MediaForm from './MediaForm';
+import { markVoiceRead } from './media-message';
 import DateTimePicker from './DateTimePicker';
 import ChoiceSelect from './ChoiceSelect';
 import { StatusTimePicker, BatteryInput } from './DeviceFields';
@@ -998,6 +1000,12 @@ export default function App() {
                 canClear={project.messages.length > 0}
                 onInsert={chooseInsert}
                 cancelInsert={cancelInsertion}
+                onReadVoice={(messageId, viewer) =>
+                  edit((p) => {
+                    const messages = markVoiceRead(p.messages, messageId, viewer);
+                    return messages === p.messages ? p : { ...p, messages };
+                  })
+                }
                 onSend={(sender, type, text) => addMessage({ id: uid(), sender, type, text })}
                 onAction={setModal}
                 onDelete={(id) => edit((p) => ({ ...p, messages: deleteMessage(p.messages, id) }))}
@@ -1177,6 +1185,19 @@ export default function App() {
             )}
           </div>
         </Dialog>
+      )}
+      {modal?.kind === 'media' && (
+        <MediaForm
+          action={modal}
+          current={project.messages.find((message) => message.id === modal.id)}
+          sendAt={sendAt}
+          onClose={closeModal}
+          onSave={(message) => {
+            if (modal.id) edit((p) => ({ ...p, messages: updateMessage(p.messages, message) }));
+            else addMessage(message);
+            closeModal();
+          }}
+        />
       )}
       {modal?.kind === 'money' && (
         <MoneyForm
@@ -1507,7 +1528,7 @@ export default function App() {
               <span>
                 <strong>领取和收款，自动补齐记录</strong>
                 <p>
-                  点输入栏「＋」发送图片、红包、转账或时间。在接收方点击红包或转账，领取、收款或退还后，两边状态和对应提示自动更新。
+                  点输入栏「＋」发送图片、语音、通话记录、红包、转账或时间。在接收方点击红包或转账，领取、收款或退还后，两边状态和对应提示自动更新。
                 </p>
               </span>
             </div>

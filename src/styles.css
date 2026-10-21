@@ -3662,8 +3662,8 @@ body,
 }
 .voice-wave {
   display: block;
-  width: 20px;
-  height: 24px;
+  width: 14px;
+  height: 18px;
   flex: none;
   color: #171717;
 }
@@ -3700,8 +3700,8 @@ body,
 }
 .call-receiver {
   display: block;
-  width: 23px;
-  height: 18px;
+  width: 19px;
+  height: 12px;
   flex: none;
 }
 .own .call-bubble {

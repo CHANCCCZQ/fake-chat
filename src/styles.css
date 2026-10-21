@@ -1246,7 +1246,7 @@ h1 {
   color: #2c673b;
 }
 .message-content:hover .message-tools,
-.message-content:focus-within .message-tools,
+.message-content:has(:focus-visible) .message-tools,
 .timeline-item.selected .message-tools {
   visibility: visible;
   opacity: 1;

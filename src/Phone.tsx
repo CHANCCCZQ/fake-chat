@@ -186,6 +186,27 @@ export default function Phone(props: Props) {
   const endRef = useRef<HTMLDivElement>(null);
   const lastId = useRef(project.messages.at(-1)?.id);
   useEffect(() => {
+    if (!selected) return;
+    const dismissOutside = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const content = target.closest('.timeline-item.selected .message-content');
+      if (!content || !bodyRef.current?.contains(content)) setSelected(null);
+    };
+    const dismissOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setSelected(null);
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && bodyRef.current?.contains(active)) active.blur();
+    };
+    document.addEventListener('pointerdown', dismissOutside);
+    document.addEventListener('keydown', dismissOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', dismissOutside);
+      document.removeEventListener('keydown', dismissOnEscape);
+    };
+  }, [selected]);
+  useEffect(() => {
     const last = project.messages.at(-1)?.id;
     if (last !== lastId.current && atBottom) {
       const body = bodyRef.current;
@@ -425,7 +446,9 @@ export default function Phone(props: Props) {
                             className={`message-hit ${moneyMessage ? 'money-hit' : ''} ${message.type === 'image' ? 'image-hit' : ''}`}
                             aria-label={`${own ? '发送' : '收到'}的${message.type === 'text' ? '消息：' + message.text : message.type === 'image' ? '图片' : message.type === 'redpacket' ? '红包' : message.type === 'voice' ? `语音，${message.durationSeconds}秒${!own && message.voiceUnread ? '，未读' : ''}` : message.type === 'call' ? `语音通话：${callLabel(message, id)}` : '转账'}`}
                             onClick={() => {
-                              setSelected(message.id);
+                              setSelected((current) =>
+                                current === message.id ? null : message.id,
+                              );
                               if (message.type === 'voice') onReadVoice(message.id, id);
                               if (moneyMessage)
                                 onAction({
